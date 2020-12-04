@@ -6,7 +6,8 @@ Including:
 SRVR-PG implementation in rllab from scratch
 
 
-Milestone
+Milestone:
+
 ✅-25.11.2020 
 get a basic knowledge of policy gradient (read blogs/ papers/ taking courses) [2 weeks] 
 
