@@ -1,4 +1,6 @@
 # Policy Gradient Agent
  Uni Stuttgart lab course Conversational AI
 
-implement SRVRPG from scratch
+Including:
+SRVR-PG implementation in rllab from scratch
+
