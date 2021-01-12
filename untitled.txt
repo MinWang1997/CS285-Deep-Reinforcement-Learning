@@ -1,1 +1,4 @@
-test
+git add homework_fall2020
+git commit -m "test"
+git push
+git status
