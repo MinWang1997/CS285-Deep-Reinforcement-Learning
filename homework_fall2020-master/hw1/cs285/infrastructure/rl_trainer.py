@@ -151,22 +151,30 @@ class RL_Trainer(object):
         :param batch_size:  the number of transitions we collect
         :return:
             paths: a list trajectories
-            envsteps_this_batch: the sum over the numbers of environment steps in paths
-            train_video_paths: paths which also contain videos for visualization purposes
+            envsteps_this_batch: the sum over the numbers of environment steps in paths ?
+            train_video_paths: paths which also contain videos for visualization purposes ?
         """
 
         # TODO decide whether to load training data or use the current policy to collect more data
         # HINT: depending on if it's the first iteration or not, decide whether to either
                 # (1) load the data. In this case you can directly return as follows
                 # ``` return loaded_paths, 0, None ```
-
                 # (2) collect `self.params['batch_size']` transitions
-
+        if itr == 0:
+            with open(load_initial_expertdata, 'rb') as f:
+                paths = pickle.load(f)
+            return paths, 0, None
+        
+        # (2) collect `self.params['batch_size']` transitions       
         # TODO collect `batch_size` samples to be used for training
         # HINT1: use sample_trajectories from utils
         # HINT2: you want each of these collected rollouts to be of length self.params['ep_len']
         print("\nCollecting data to be used for training...")
         paths, envsteps_this_batch = TODO
+        
+        
+        
+        
 
         # collect more rollouts with the same policy, to be saved as videos in tensorboard
         # note: here, we collect MAX_NVIDEO rollouts, each of length MAX_VIDEO_LEN
@@ -180,6 +188,7 @@ class RL_Trainer(object):
 
 
     def train_agent(self):
+
         print('\nTraining agent using sampled data from replay buffer...')
         all_logs = []
         for train_step in range(self.params['num_agent_train_steps_per_iter']):

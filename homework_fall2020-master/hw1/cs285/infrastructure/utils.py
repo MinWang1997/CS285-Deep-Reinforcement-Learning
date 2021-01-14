@@ -6,8 +6,8 @@ import time
 
 def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('rgb_array')):
 
-    # initialize env for the beginning of a new rollout
-    ob = TODO # HINT: should be the output of resetting the env
+    # initialize/reset Environment and get Observation for the beginning of each new rollout /tau
+    ob = env.reset() # TODO HINT: should be the output of resetting the env 
 
     # init vars
     obs, acs, rewards, next_obs, terminals, image_obs = [], [], [], [], [], []
@@ -25,13 +25,13 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
                 env.render(mode=render_mode)
                 time.sleep(env.model.opt.timestep)
 
-        # use the most recent ob to decide what to do
+        # use the most recent Observation ob to decide what to do i.e., action
         obs.append(ob)
-        ac = TODO # HINT: query the policy's get_action function
+        ac = policy.get_action(ob)  #TODO HINT: query the policy's get_action function 
         ac = ac[0]
         acs.append(ac)
 
-        # take that action and record results
+        # Each timestep, the agent chooses an action, and the environment returns an observation and a reward. Done being True indicates the episode has terminated.
         ob, rew, done, _ = env.step(ac)
 
         # record result of taking that action
@@ -41,7 +41,7 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
 
         # TODO end the rollout if the rollout ended
         # HINT: rollout can end due to done, or due to max_path_length
-        rollout_done = TODO # HINT: this is either 0 or 1
+        rollout_done = done or steps >= max_path_length # HINT: this is either 0 or 1
         terminals.append(rollout_done)
 
         if rollout_done:
@@ -51,7 +51,7 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
 
 def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, render=False, render_mode=('rgb_array')):
     """
-        Collect rollouts until we have collected min_timesteps_per_batch steps.
+        Collect rollouts until we have collected min_timesteps_per_batch T steps.
 
         TODO implement this function
         Hint1: use sample_trajectory to get each path (i.e. rollout) that goes into paths
@@ -61,7 +61,7 @@ def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, r
     paths = []
     while timesteps_this_batch < min_timesteps_per_batch:
 
-        TODO
+        TODO collect
 
     return paths, timesteps_this_batch
 
