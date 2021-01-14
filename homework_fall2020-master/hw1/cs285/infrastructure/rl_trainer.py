@@ -170,9 +170,8 @@ class RL_Trainer(object):
         # HINT1: use sample_trajectories from utils
         # HINT2: you want each of these collected rollouts to be of length self.params['ep_len']
         print("\nCollecting data to be used for training...")
-        paths, envsteps_this_batch = TODO
-        
-        
+        #TODO
+        paths, envsteps_this_batch = sample_trajectories(env=self.env, policy=collect_policy, min_timesteps_per_batch= batch_size, max_path_length = self.params['ep_len'])
         
         
 
@@ -187,21 +186,23 @@ class RL_Trainer(object):
         return paths, envsteps_this_batch, train_video_paths
 
 
+    
     def train_agent(self):
 
         print('\nTraining agent using sampled data from replay buffer...')
         all_logs = []
         for train_step in range(self.params['num_agent_train_steps_per_iter']):
 
-            # TODO sample some data from the data buffer
+            # TODO sample some data from the data buffer HOW??? 
             # HINT1: use the agent's sample function
             # HINT2: how much data = self.params['train_batch_size']
-            ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch = TODO
+            ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch = self.agent.sample(self.params['train_batch_size'])
+            
 
-            # TODO use the sampled data to train an agent
+            # TODO use the sampled data above to train an agent
             # HINT: use the agent's train function
             # HINT: keep the agent's training log for debugging
-            train_log = TODO
+            train_log = self.agent.train(ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch)
             all_logs.append(train_log)
         return all_logs
 
@@ -210,8 +211,9 @@ class RL_Trainer(object):
 
         # TODO relabel collected obsevations (from our policy) with labels from an expert policy
         # HINT: query the policy (using the get_action function) with paths[i]["observation"]
-        # and replace paths[i]["action"] with these expert labels
-
+        # and replace each paths[i]["action"] with these expert labels
+        for path in paths:
+            path['action'] = expert_policy.get_action(path['observation'])
         return paths
 
     ####################################

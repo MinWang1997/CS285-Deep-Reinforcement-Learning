@@ -51,7 +51,7 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
 
 def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, render=False, render_mode=('rgb_array')):
     """
-        Collect rollouts until we have collected min_timesteps_per_batch T steps.
+        Collect rollouts until we have collected min_timesteps_per_batch steps.
 
         TODO implement this function
         Hint1: use sample_trajectory to get each path (i.e. rollout) that goes into paths
@@ -60,8 +60,11 @@ def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, r
     timesteps_this_batch = 0
     paths = []
     while timesteps_this_batch < min_timesteps_per_batch:
-
-        TODO collect
+        #TODO
+        Path=sample_trajectory(env, policy, max_path_length, render, render_mode)
+        paths.append(Path)
+        timesteps_this_batch += get_pathlength(Path)
+        
 
     return paths, timesteps_this_batch
 
@@ -74,7 +77,10 @@ def sample_n_trajectories(env, policy, ntraj, max_path_length, render=False, ren
     """
     paths = []
 
-    TODO
+    #TODO
+    For i in range(ntraj):
+        Path=sample_trajectory(env, policy, max_path_length, render, render_mode)
+        paths.append(Path)
 
     return paths
 
