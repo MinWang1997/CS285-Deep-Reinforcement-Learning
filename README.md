@@ -3,5 +3,5 @@
 
 Including:
 
-SRVR-PG implementation in rllab from scratch
+CS 285 homework 1 and 2
 
