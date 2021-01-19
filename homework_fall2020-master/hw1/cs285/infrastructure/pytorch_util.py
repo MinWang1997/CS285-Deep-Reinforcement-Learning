@@ -68,8 +68,13 @@ def set_device(gpu_id):
 
 
 def from_numpy(*args, **kwargs):
+    #move a tensor to the GPU by using the to() function.
     return torch.from_numpy(*args, **kwargs).float().to(device)
 
 
+
 def to_numpy(tensor):
+    #Since np.ndarray does not store/represent the computational graph associated with the array, this graph should be explicitly removed using detach()
     return tensor.to('cpu').detach().numpy()
+
+
