@@ -6,7 +6,7 @@ import time
 
 def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('rgb_array')):
 
-    # initialize/reset Environment and get Observation for the beginning of each new rollout /tau
+    # initialize/reset Environment and get observation for the beginning of each new rollout /tau
     ob = env.reset() # TODO HINT: should be the output of resetting the env 
 
     # init vars
@@ -25,13 +25,14 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
                 env.render(mode=render_mode)
                 time.sleep(env.model.opt.timestep)
 
-        # use the most recent Observation ob to decide what to do i.e., action
+        # use the most recent Observation ob to decide which action to take
         obs.append(ob)
         ac = policy.get_action(ob)  #TODO HINT: query the policy's get_action function 
-        ac = ac[0]
+        # Each timestep, the agent chooses an action
+        ac = ac[0]#Q get the first action why?
         acs.append(ac)
 
-        # Each timestep, the agent chooses an action, and the environment returns an observation and a reward. Done being True indicates the episode has terminated.
+        #environment returns an observation and a reward. Done being True indicates the episode has terminated.
         ob, rew, done, _ = env.step(ac)
 
         # record result of taking that action
@@ -41,7 +42,7 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
 
         # TODO end the rollout if the rollout ended
         # HINT: rollout can end due to done, or due to max_path_length
-        rollout_done = done or steps >= max_path_length # HINT: this is either 0 or 1
+        rollout_done = done or (steps >= max_path_length) # HINT: this is either 0 or 1
         terminals.append(rollout_done)
 
         if rollout_done:
