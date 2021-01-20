@@ -48,6 +48,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             self.logits_na.to(ptu.device)
             self.mean_net = None
             self.logstd = None
+            ##construct an Optimizer
             self.optimizer = optim.Adam(self.logits_na.parameters(),
                                         self.learning_rate)
         else:
@@ -89,7 +90,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         Returns:
             numpy.ndarray: Predicted action by forward NN
             
-        Q: why not return tensor directly???
+        Q: why not return tensor directly???and use this function in update()? why return np array instead of tensor?
         """
         return ptu.to_numpy(self.forward(ptu.from_numpy(observation)))
     
@@ -111,7 +112,8 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
     # return more flexible objects, such as a
     # `torch.distributions.Distribution` object. It's up to you!
     def forward(self, observation: torch.FloatTensor) -> Any:
-        if self.discrete: # discrete or continuous policy by building a feedforward neural network
+        if self.discrete: # discrete or continuous policy 
+            # building a feedforward neural network
             return self.logits_na(observation)
         return self.mean_net(observation)
     
@@ -132,12 +134,22 @@ class MLPPolicySL(MLPPolicy):
     ):
         # TODO: update the policy and return the loss
         
-        self.optimizer.zero_grad()
+        
+        #zeroing out the gradients to prevent gradient accumulation before calling loss.backward()
+        self.optimizer.zero_grad()  
+        
+        #forward-propagation of NN i.e., observation -> policy takes action 
         pred_actions = self.forward(ptu.from_numpy(observations))
-        #print(pred_actions)
-        loss = self.loss.forward(pred_actions, ptu.from_numpy(actions))
-        loss.backward()
-        self.optimizer.step()
+        
+        #Q: why not use self._get_action(observations)? 
+        #Q: How to understand loss.forward?
+        loss = self.loss.forward(pred_actions, ptu.from_numpy(actions))#loss(y_hat,y) 
+        
+        
+        
+        loss.backward()#back-propagation:compute gradients 
+        self.optimizer.step()#updates parameters
+        
         return {
             # You can add extra logging information here, but keep this line
             'Training Loss': ptu.to_numpy(loss),
