@@ -79,7 +79,7 @@ def sample_n_trajectories(env, policy, ntraj, max_path_length, render=False, ren
     paths = []
 
     #TODO
-    For i in range(ntraj):
+    for i in range(ntraj):
         Path=sample_trajectory(env, policy, max_path_length, render, render_mode)
         paths.append(Path)
 
