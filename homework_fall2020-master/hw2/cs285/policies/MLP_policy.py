@@ -85,22 +85,47 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
     ##################################
 
     # query the policy with observation(s) to get selected action(s)
-    def get_action(self, obs: np.ndarray) -> np.ndarray:
-        # TODO: get this from hw1
-        return action
+def get_action(self, obs: np.ndarray) -> np.ndarray:
+        if len(obs.shape) > 1:
+            observation = obs
+        else:
+            observation = obs[None]
+
+        # TODO return the action that the policy prescribes
+        """Get a single action from this policy NN output for the input observation.
+
+        Args:
+            obs (numpy.ndarray): Observation from environment.
+
+        Returns:
+            numpy.ndarray: Predicted action by forward NN
+            
+        Q: why not return tensor directly???and use this function in update()? why return np array instead of tensor?
+        """
+        return ptu.to_numpy(self.forward(ptu.from_numpy(observation)))
 
     # update/train this policy
     def update(self, observations, actions, **kwargs):
         raise NotImplementedError
 
+        
+        
+        
+        
+        
     # This function defines the forward pass of the network.
     # You can return anything you want, but you should be able to differentiate
     # through it. For example, you can return a torch.FloatTensor. You can also
     # return more flexible objects, such as a
     # `torch.distributions.Distribution` object. It's up to you!
-    def forward(self, observation: torch.FloatTensor):
-        # TODO: get this from hw1
-        return action_distribution
+
+    def forward(self, observation: torch.FloatTensor) -> Any:
+        if self.discrete: # discrete or continuous policy 
+            # building a feedforward neural network
+            return self.logits_na(observation)
+        return self.mean_net(observation)
+    
+    #Q: why can I  return anything?
 
 
 #####################################################
