@@ -118,6 +118,9 @@ def get_action(self, obs: np.ndarray) -> np.ndarray:
     # through it. For example, you can return a torch.FloatTensor. You can also
     # return more flexible objects, such as a
     # `torch.distributions.Distribution` object. It's up to you!
+    '''
+    #Q: why can I  return anything?
+    '''
 
     def forward(self, observation: torch.FloatTensor) -> Any:
         if self.discrete: # discrete or continuous policy 
@@ -125,9 +128,14 @@ def get_action(self, obs: np.ndarray) -> np.ndarray:
             return self.logits_na(observation)
         return self.mean_net(observation)
     
-    #Q: why can I  return anything?
+    
+    
+    
 
 
+    
+    
+    
 #####################################################
 #####################################################
 
@@ -146,11 +154,19 @@ class MLPPolicyPG(MLPPolicy):
         # HINT1: Recall that the expression that we want to MAXIMIZE
             # is the expectation over collected trajectories of:
             # sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * (Q_t - b_t)]]
+            '''
+            We max grad J instead of J ? Why?
+            '''
+            
         # HINT2: you will want to use the `log_prob` method on the distribution returned
             # by the `forward` method
+            
+            '''
+            ?
+            '''
         # HINT3: don't forget that `optimizer.step()` MINIMIZES a loss
 
-        loss = TODO
+        loss = sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * self.estimate_advantage]]
 
         # TODO: optimize `loss` using `self.optimizer`
         # HINT: remember to `zero_grad` first

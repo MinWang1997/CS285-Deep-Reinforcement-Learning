@@ -50,10 +50,7 @@ class PGAgent(BaseAgent):
         q_values = self.calculate_q_vals(rewards_list)
 
         # step 2: calculate advantages that correspond to each (s_t, a_t) point
-        advantages = self.estimate_advantage(observations, q_values)
-'''
-Q what's advantages?
-'''
+        advantages = self.estimate_advantage(observations, q_values) #advantages= q_values-baseline
         
         
         # TODO: step 3: use all datapoints (s_t, a_t, q_t, adv_t) to update the PG actor/policy
@@ -160,7 +157,7 @@ Q what's advantages?
         indices = np.arange(len(rewards))
         # 2) create a list where the entry at each index (t') is gamma^(t')
         '''
-        gamma^(t'-1) or gamma^(t')? 
+        use gamma^(t'-1) or gamma^(t')? equation 9 or 14?
         '''
         discounts = np.power(self.gamma, indices)
         # 3) create a list where the entry at each index (t') is gamma^(t') * r_{t'}
