@@ -8,6 +8,9 @@ import numpy as np
 import torch
 from torch import distributions
 
+#add
+from cs285.infrastructure import utils
+
 from cs285.infrastructure import pytorch_util as ptu
 from cs285.policies.base_policy import BasePolicy
 
@@ -173,6 +176,14 @@ class MLPPolicyPG(MLPPolicy):
         '''
         how to understand the pseudo-loss as a weighted maximum likelihood?
         '''
+        
+        #use Back propagation tool to compute policy gradient: the gradient of pseudo-loss is equal to the policy gradient. 
+        #the pseudo-loss is a weighted maximum likelihood, where the weight is advantages (reward to go with baseline), i.e., Q = q_value-baseline
+        # - Gradient decent -> accent
+        
+        '''
+        use mean(in slides cs 285 L5) or sum(in formula)?
+        '''
         loss = torch.neg(torch.mean(torch.mul(log_pi, advantages)))
 
 
@@ -185,11 +196,11 @@ class MLPPolicyPG(MLPPolicy):
         if self.nn_baseline:
             ## TODO: normalize the q_values to have a mean of zero and a standard deviation of one
             ## HINT: there is a `normalize` function in `infrastructure.utils`
-            targets = TODO
+            targets = utils.normalize(q_values, np.mean(q_values), np.std(q_values)):
             targets = ptu.from_numpy(targets)
 
             ## TODO: use the `forward` method of `self.baseline` to get baseline predictions
-            baseline_predictions = TODO
+            baseline_predictions = self.baseline.forward(observations).squeeze()
             
             ## avoid any subtle broadcasting bugs that can arise when dealing with arrays of shape
             ## [ N ] versus shape [ N x 1 ]
@@ -198,11 +209,13 @@ class MLPPolicyPG(MLPPolicy):
             
             # TODO: compute the loss that should be optimized for training the baseline MLP (`self.baseline`)
             # HINT: use `F.mse_loss`
-            baseline_loss = TODO
+            baseline_loss = self.baseline_loss(baseline_predictions, targets)
 
             # TODO: optimize `baseline_loss` using `self.baseline_optimizer`
             # HINT: remember to `zero_grad` first
-            TODO
+            self.baseline_optimizer.zero_grad()
+            baseline_loss.backward()
+            self.baseline_optimizer.step()
 
         train_log = {
             'Training Loss': ptu.to_numpy(loss),
