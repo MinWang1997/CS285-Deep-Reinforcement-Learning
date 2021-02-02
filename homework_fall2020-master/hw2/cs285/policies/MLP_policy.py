@@ -194,12 +194,20 @@ class MLPPolicyPG(MLPPolicy):
         self.optimizer.step()
 
         if self.nn_baseline:
+            #most common choice of baseline is the on-policy value function V^pi(s_t) i.e., average return an agent gets if it starts in state s_t (Reward to go, i.e.,q_value)
+            
+            
             ## TODO: normalize the q_values to have a mean of zero and a standard deviation of one
+            '''
+            why normalize q_values first as targets of baseline?
+            '''
             ## HINT: there is a `normalize` function in `infrastructure.utils`
             targets = utils.normalize(q_values, np.mean(q_values), np.std(q_values))
             targets = ptu.from_numpy(targets)
 
-            ## TODO: use the `forward` method of `self.baseline` to get baseline predictions
+            # TODO: use the `forward` method of `self.baseline` to get baseline predictions 
+            
+            #self.baseline is approximated by a neural network, which is updated concurrently with the policy
             baseline_predictions = self.baseline.forward(observations).squeeze()
             
             ## avoid any subtle broadcasting bugs that can arise when dealing with arrays of shape
@@ -209,6 +217,8 @@ class MLPPolicyPG(MLPPolicy):
             
             # TODO: compute the loss that should be optimized for training the baseline MLP (`self.baseline`)
             # HINT: use `F.mse_loss`
+            
+            #simplest method for learning baseline is minimize MSE.
             baseline_loss = self.baseline_loss(baseline_predictions, targets)
 
             # TODO: optimize `baseline_loss` using `self.baseline_optimizer`
