@@ -104,9 +104,12 @@ def get_action(self, obs: np.ndarray) -> np.ndarray:
         """
         return ptu.to_numpy(self.forward(ptu.from_numpy(observation)))
 
-    # update/train this policy
-    def update(self, observations, actions, **kwargs):
-        raise NotImplementedError
+    
+    
+    
+# update/train this policy
+def update(self, observations, actions, **kwargs):
+    raise NotImplementedError
 
         
         
@@ -123,12 +126,15 @@ def get_action(self, obs: np.ndarray) -> np.ndarray:
     '''
 
     def forward(self, observation: torch.FloatTensor) -> Any:
-        if self.discrete: # discrete or continuous policy 
-            # building a feedforward neural network
-            return self.logits_na(observation)
-        return self.mean_net(observation)
+
+    # building a feedforward neural network for discrete/continues case
     
+    #logits_na and mean_net are the same and both from build_mlp method, return NN forwald pass
     
+        if self.discrete: # discrete -> categorical policy
+            return distributions.Categorical(logits=self.logits_na(observation))
+        # continues -> Multivariate Normal
+        return distributions.MultivariateNormal(self.mean_net(observation), scale_tril = torch.diag(self.logstd.exp()))
     
     
 
@@ -148,29 +154,33 @@ class MLPPolicyPG(MLPPolicy):
     def update(self, observations, actions, advantages, q_values=None):
         observations = ptu.from_numpy(observations)
         actions = ptu.from_numpy(actions)
-        advantages = ptu.from_numpy(advantages)
+        advantages = ptu.from_numpy(advantages)#advantages=(Q_t - b_t)
 
         # TODO: compute the loss that should be optimized when training with policy gradient
         # HINT1: Recall that the expression that we want to MAXIMIZE
             # is the expectation over collected trajectories of:
             # sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * (Q_t - b_t)]]
-            '''
-            We max grad J instead of J ? Why?
-            '''
+    '''
+    We max grad J instead of J ? Why?
+    '''
             
-        # HINT2: you will want to use the `log_prob` method on the distribution returned
-            # by the `forward` method
-            
-            '''
-            ?
-            '''
+        # HINT2: you will want to use the `log_prob` method on the distribution returned # by the `self.forward` method above
         # HINT3: don't forget that `optimizer.step()` MINIMIZES a loss
+        
+        
+        log_pi = self.forward(observations).log_prob(actions)#log pi(a_t|s_t)  
+        #print(log_pi.shape)
+        '''
+        how to understand the pseudo-loss as a weighted maximum likelihood?
+        '''
+        loss = torch.neg(torch.mean(torch.mul(log_pi, advantages)))
 
-        loss = sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * self.estimate_advantage]]
 
         # TODO: optimize `loss` using `self.optimizer`
         # HINT: remember to `zero_grad` first
-        TODO
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
 
         if self.nn_baseline:
             ## TODO: normalize the q_values to have a mean of zero and a standard deviation of one
