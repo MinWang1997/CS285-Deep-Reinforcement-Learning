@@ -163,15 +163,15 @@ class MLPPolicyPG(MLPPolicy):
         # HINT1: Recall that the expression that we want to MAXIMIZE
             # is the expectation over collected trajectories of:
             # sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * (Q_t - b_t)]]
-    '''
-    We max grad J instead of J ? Why?
-    '''
+        '''
+        We max grad J instead of J ? Why?
+        '''
             
         # HINT2: you will want to use the `log_prob` method on the distribution returned # by the `self.forward` method above
         # HINT3: don't forget that `optimizer.step()` MINIMIZES a loss
         
-        
-        log_pi = self.forward(observations).log_prob(actions)#log pi(a_t|s_t)  
+        #log pi(a_t|s_t) 
+        log_pi = self.forward(observations).log_prob(actions) 
         #print(log_pi.shape)
         '''
         how to understand the pseudo-loss as a weighted maximum likelihood?
@@ -196,7 +196,7 @@ class MLPPolicyPG(MLPPolicy):
         if self.nn_baseline:
             ## TODO: normalize the q_values to have a mean of zero and a standard deviation of one
             ## HINT: there is a `normalize` function in `infrastructure.utils`
-            targets = utils.normalize(q_values, np.mean(q_values), np.std(q_values)):
+            targets = utils.normalize(q_values, np.mean(q_values), np.std(q_values))
             targets = ptu.from_numpy(targets)
 
             ## TODO: use the `forward` method of `self.baseline` to get baseline predictions

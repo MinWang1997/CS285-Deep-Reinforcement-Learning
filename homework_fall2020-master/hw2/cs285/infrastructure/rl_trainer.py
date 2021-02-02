@@ -172,7 +172,11 @@ class RL_Trainer(object):
                 # (1) load the data. In this case you can directly return as follows
                 # ``` return loaded_paths, 0, None ```
                 # (2) collect `self.params['batch_size']` transitions
-        if itr == 0:
+                
+                
+                
+        # if your load_initial_expertdata is None, then you need to collect new trajectories at *every* iteration  
+        if itr == 0 and load_initial_expertdata is not None:
             with open(load_initial_expertdata, 'rb') as f:
                 paths = pickle.load(f)
             return paths, 0, None
@@ -183,7 +187,7 @@ class RL_Trainer(object):
         # HINT2: you want each of these collected rollouts to be of length self.params['ep_len']
         print("\nCollecting data to be used for training...")
         #TODO
-        paths, envsteps_this_batch = sample_trajectories(env=self.env, policy=collect_policy, min_timesteps_per_batch= batch_size, max_path_length = self.params['ep_len'])
+        paths, envsteps_this_batch = utils.sample_trajectories(env=self.env, policy=collect_policy, min_timesteps_per_batch= batch_size, max_path_length = self.params['ep_len'])
         
         
 
