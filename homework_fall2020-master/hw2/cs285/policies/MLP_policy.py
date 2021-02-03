@@ -88,7 +88,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
     ##################################
 
     # query the policy with observation(s) to get selected action(s)
-def get_action(self, obs: np.ndarray) -> np.ndarray:
+    def get_action(self, obs: np.ndarray) -> np.ndarray:
         if len(obs.shape) > 1:
             observation = obs
         else:
@@ -105,14 +105,14 @@ def get_action(self, obs: np.ndarray) -> np.ndarray:
             
         Q: why not return tensor directly???and use this function in update()? why return np array instead of tensor?
         """
-        return ptu.to_numpy(self.forward(ptu.from_numpy(observation)))
+        return ptu.to_numpy(self.forward(ptu.from_numpy(observation)).sample())
 
     
     
     
 # update/train this policy
-def update(self, observations, actions, **kwargs):
-    raise NotImplementedError
+    def update(self, observations, actions, **kwargs):
+        raise NotImplementedError
 
         
         
@@ -128,7 +128,8 @@ def update(self, observations, actions, **kwargs):
     #Q: why can I  return anything?
     '''
 
-    def forward(self, observation: torch.FloatTensor) -> Any:
+    def forward(self, observation: torch.FloatTensor): 
+    #-> Any:
 
     # building a feedforward neural network for discrete/continues case
     
@@ -154,7 +155,7 @@ class MLPPolicyPG(MLPPolicy):
         super().__init__(ac_dim, ob_dim, n_layers, size, **kwargs)
         self.baseline_loss = nn.MSELoss()
 
-    def update(self, observations, actions, advantages, q_values=None):
+    def update(self, observations, actions, advantages=None, q_values=None):
         observations = ptu.from_numpy(observations)
         actions = ptu.from_numpy(actions)
         advantages = ptu.from_numpy(advantages)#advantages=(Q_t - b_t)

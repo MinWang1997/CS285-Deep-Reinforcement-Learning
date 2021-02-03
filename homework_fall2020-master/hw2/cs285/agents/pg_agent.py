@@ -3,6 +3,9 @@ import numpy as np
 from .base_agent import BaseAgent
 from cs285.policies.MLP_policy import MLPPolicyPG
 from cs285.infrastructure.replay_buffer import ReplayBuffer
+#add
+from cs285.infrastructure.utils import normalize
+
 
 '''
 Q -> what's baseAgent?
