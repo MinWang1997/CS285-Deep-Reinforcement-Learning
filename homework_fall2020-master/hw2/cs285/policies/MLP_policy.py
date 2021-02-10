@@ -102,9 +102,11 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
         Returns:
             numpy.ndarray: Predicted action by forward NN
-            
-        Q: why not return tensor directly???and use this function in update()? why return np array instead of tensor?
         """
+        
+ 
+        # return np array instead of tensor, may because np is more general
+     
         return ptu.to_numpy(self.forward(ptu.from_numpy(observation)).sample())
 
     
@@ -123,10 +125,10 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
     # You can return anything you want, but you should be able to differentiate
     # through it. For example, you can return a torch.FloatTensor. You can also
     # return more flexible objects, such as a
-    # `torch.distributions.Distribution` object. It's up to you!
-    '''
-    #Q: why can I  return anything?
-    '''
+    # `torch.distributions.Distribution` object(and then sample action in get_action function). It's up to you!
+    
+    
+  
 
     def forward(self, observation: torch.FloatTensor): 
     #-> Any:
