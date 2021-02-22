@@ -166,27 +166,26 @@ class MLPPolicyPG(MLPPolicy):
         # HINT1: Recall that the expression that we want to MAXIMIZE
             # is the expectation over collected trajectories of:
             # sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * (Q_t - b_t)]]
-        '''
-        We max grad J instead of J ? Why?
-        '''
+
+        #We max gradient of Cumulative rewards J(to take a step towards steepest direction) instead of J itself because it is hard to max J directly.
+        
             
         # HINT2: you will want to use the `log_prob` method on the distribution returned # by the `self.forward` method above
         # HINT3: don't forget that `optimizer.step()` MINIMIZES a loss
         
-        #log pi(a_t|s_t) 
+        #compute log pi(a_t|s_t) 
         log_pi = self.forward(observations).log_prob(actions) 
         #print(log_pi.shape)
-        '''
-        how to understand the pseudo-loss as a weighted maximum likelihood?
-        '''
-        
-        #use Back propagation tool to compute policy gradient: the gradient of pseudo-loss is equal to the policy gradient. 
+    
+
+        #use Back propagation tool to help us to compute policy gradient: the pseudo-loss is policy gradient without gradient -> the gradient of pseudo-loss is equal to the policy gradient.
         #the pseudo-loss is a weighted maximum likelihood, where the weight is advantages (reward to go with baseline), i.e., Q = q_value-baseline
-        # - Gradient decent -> accent
+        # use Minus - transform Gradient decent -> accent
         
         '''
-        use mean(in slides cs 285 L5) or sum(in formula)?
+        use mean(in slides cs 285 L5) or sum(in formula hint 1)?
         '''
+        #compute pseudo-loss sum_{t=0}^{T-1} [log pi(a_t|s_t) * (q_t - b_t)]
         loss = torch.neg(torch.mean(torch.mul(log_pi, advantages)))
 
 

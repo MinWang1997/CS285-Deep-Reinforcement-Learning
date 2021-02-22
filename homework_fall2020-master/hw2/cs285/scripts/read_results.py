@@ -18,7 +18,7 @@ def get_section_results(file):
 if __name__ == '__main__':
     import glob
 
-    logdir = 'data/q1_lb_rtg_na_CartPole-v0_13-09-2020_23-32-10/events*'
+    logdir = 'q1_sb_no_rtg_dsa_CartPole-v0_02-02-2021_11-05-03/events*'
     eventfile = glob.glob(logdir)[0]
 
     X, Y = get_section_results(eventfile)

@@ -89,7 +89,7 @@ def main():
     params['train_batch_size'] = params['batch_size']
 
     ##################################
-    ### CREATE DIRECTORY FOR LOGGING
+    ### CREATE DIRECTORY FOR LOGGING (hw2/data/...)
     ##################################
 
     data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../data')
