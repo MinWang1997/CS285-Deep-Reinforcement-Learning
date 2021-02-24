@@ -166,7 +166,7 @@ class RL_Trainer(object):
             envsteps_this_batch: the sum over the numbers of environment steps in paths ?
             train_video_paths: paths which also contain videos for visualization purposes ?
         """
-
+        ## TODO: get this from hw1
         # TODO decide whether to load training data or use the current policy to collect more data
         # HINT: depending on if it's the first iteration or not, decide whether to either
                 # (1) load the data. In this case you can directly return as follows
@@ -178,7 +178,7 @@ class RL_Trainer(object):
         # if your load_initial_expertdata is None, then you need to collect new trajectories at *every* iteration  
         if itr == 0 and load_initial_expertdata is not None:
             with open(load_initial_expertdata, 'rb') as f:
-                paths = pickle.load(f)
+                paths = pickle.load(f.read())
             return paths, 0, None
         
         # (2) collect `self.params['batch_size']` transitions       
@@ -212,7 +212,7 @@ class RL_Trainer(object):
         all_logs = []
         for train_step in range(self.params['num_agent_train_steps_per_iter']):
 
-            # TODO sample some data from the data buffer HOW??? 
+            # TODO sample some data from the data buffer  
             # HINT1: use the agent's sample function
             # HINT2: how much data = self.params['train_batch_size']
             ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch = self.agent.sample(self.params['train_batch_size'])

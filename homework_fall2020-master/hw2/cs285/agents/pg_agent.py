@@ -1,15 +1,12 @@
 import numpy as np
 
-from .base_agent import BaseAgent
+from .base_agent import BaseAgent 
 from cs285.policies.MLP_policy import MLPPolicyPG
 from cs285.infrastructure.replay_buffer import ReplayBuffer
 #add
 from cs285.infrastructure.utils import normalize
 
 
-'''
-Q -> what's baseAgent?
-'''
 class PGAgent(BaseAgent):
     def __init__(self, env, agent_params):
         super(PGAgent, self).__init__()
@@ -53,8 +50,7 @@ class PGAgent(BaseAgent):
         q_values = self.calculate_q_vals(rewards_list)
 
         # step 2: calculate advantages that correspond to each (s_t, a_t) point
-        advantages = self.estimate_advantage(observations, q_values) #advantages= q_values-baseline
-        
+        advantages = self.estimate_advantage(observations, q_values) #advantages= q_values-baseline   
         
         # TODO: step 3: use all datapoints (s_t, a_t, q_t, adv_t) to update the PG actor/policy
         ## HINT: `train_log` should be returned by your actor update method
@@ -160,7 +156,7 @@ class PGAgent(BaseAgent):
         indices = np.arange(len(rewards))
         # 2) create a list where the entry at each index (t') is gamma^(t')
         '''
-        use gamma^(t'-1) or gamma^(t')? equation 9 or 14?
+        use gamma^(t'-1) or gamma^(t')? equation 9 or 14 in hw2?
         '''
         discounts = np.power(self.gamma, indices)
         # 3) create a list where the entry at each index (t') is gamma^(t') * r_{t'}
@@ -168,7 +164,7 @@ class PGAgent(BaseAgent):
         # 4) calculate a scalar: sum_{t'=0}^{T-1} gamma^(t') * r_{t'}
         sum_of_discounted_rewards = np.sum(discounted_rewards)
         # 5) create a list of length T-1, where each entry t contains that scalar
-        list_of_discounted_returns = [sum_of_discounted_rewards] * len(rewards) 
+        list_of_discounted_returns = sum_of_discounted_rewards * np.ones_like(rewards) 
             
         #reture Q^pi(s,a) list where each element is Q^pi(s_t,a_t)= same q   
         return list_of_discounted_returns
@@ -184,12 +180,8 @@ class PGAgent(BaseAgent):
         # TODO: create `list_of_discounted_returns` 
         # HINT1: note that each entry of the output should now be unique,
             # because the summation happens over [t, T] instead of [0, T]
-        # HINT2: it is possible to write a vectorized solution, but a solution
-            # using a for loop is also fine
+        # HINT2: it is possible to write a vectorized solution, but a solution using a for loop is also fine
 
-        
-    
-    
         all_discounted_cumsums = []
 
         # for loop over steps (t) of the given rollout
@@ -213,4 +205,17 @@ class PGAgent(BaseAgent):
         list_of_discounted_cumsums = np.array(all_discounted_cumsums)
         ##reture Q^pi(s,a) list where each element is Q^pi(s_t,a_t) is different
         return list_of_discounted_cumsums 
+    '''
+        all_discounted_cumsums = []
 
+        # for loop over steps (t) of the given rollout
+        for start_time_index in range(len(rewards)):
+            discounts = self.gamma ** np.arange(len(rewards) - start_time_index)
+            sum_discounted_rtg = sum(rewards[start_time_index:] * discounts)
+
+            # appending each of these calculated sums into the list to return                   
+            all_discounted_cumsums.append(sum_discounted_rtg)
+
+            list_of_discounted_cumsums = np.array(all_discounted_cumsums)
+        return list_of_discounted_cumsums 
+    '''

@@ -87,7 +87,9 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
     ##################################
 
+    
     # query the policy with observation(s) to get selected action(s)
+    # TODO: get this from hw1
     def get_action(self, obs: np.ndarray) -> np.ndarray:
         if len(obs.shape) > 1:
             observation = obs
@@ -95,19 +97,16 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             observation = obs[None]
 
         # TODO return the action that the policy prescribes
-        """Get a single action from this policy NN output for the input observation.
+    
 
-        Args:
-            obs (numpy.ndarray): Observation from environment.
-
-        Returns:
-            numpy.ndarray: Predicted action by forward NN
-        """
+        #Args:obs (numpy.ndarray): Observation from environment.
+        #Returns:numpy.ndarray: Predicted action by forward NN. Note:return numpy array instead of tensor, may because np is more general
         
- 
-        # return np array instead of tensor, may because np is more general
+        action_distribution = self.forward(ptu.from_numpy(observation))
+        action = action_distribution.sample()  
+        
+        return ptu.to_numpy(action)
      
-        return ptu.to_numpy(self.forward(ptu.from_numpy(observation)).sample())
 
     
     
@@ -122,25 +121,21 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         
         
     # This function defines the forward pass of the network.
-    # You can return anything you want, but you should be able to differentiate
-    # through it. For example, you can return a torch.FloatTensor. You can also
-    # return more flexible objects, such as a
-    # `torch.distributions.Distribution` object(and then sample action in get_action function). It's up to you!
+    # You can return anything you want, but you should be able to differentiate through it. For example, you can return a torch.FloatTensor. 
+    #You can also return more flexible objects, such as a `torch.distributions.Distribution` object(and then sample action in get_action function). It's up to you!
+    # TODO: get this from hw1
     
-    
-  
-
     def forward(self, observation: torch.FloatTensor): 
-    #-> Any:
-
-    # building a feedforward neural network for discrete/continues case
-    
-    #logits_na and mean_net are the same and both from build_mlp method, return NN forwald pass
+    # TODO: get this from hw1
+    # building a feedforward neural network policy and return action distribution 
+    #logits_na and mean_net (for discrete/continues case), are the same network and both are from build_mlp method, to construct log-probabilities and probabilities for actions, and then we can use the get_action function samples actions based on it.
     
         if self.discrete: # discrete -> categorical policy
-            return distributions.Categorical(logits=self.logits_na(observation))
-        # continues -> Multivariate Normal
-        return distributions.MultivariateNormal(self.mean_net(observation), scale_tril = torch.diag(self.logstd.exp()))
+            action_distribution = distributions.Categorical(logits=self.logits_na(observation))
+       
+        else:  # continues -> Multivariate Normal
+            action_distribution = distributions.MultivariateNormal( loc = self.mean_net(observation), scale_tril = torch.diag(torch.exp(self.logstd)))
+        return action_distribution
     
     
 
@@ -163,28 +158,22 @@ class MLPPolicyPG(MLPPolicy):
         advantages = ptu.from_numpy(advantages)#advantages=(Q_t - b_t)
 
         # TODO: compute the loss that should be optimized when training with policy gradient
-        # HINT1: Recall that the expression that we want to MAXIMIZE
-            # is the expectation over collected trajectories of:
-            # sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * (Q_t - b_t)]]
-
+        # HINT1: Recall that the expression that we want to MAXIMIZE is the expectation over collected trajectories of: sum_{t=0}^{T-1} [grad [log pi(a_t|s_t) * (Q_t - b_t)]]
         #We max gradient of Cumulative rewards J(to take a step towards steepest direction) instead of J itself because it is hard to max J directly.
-        
-            
+                 
         # HINT2: you will want to use the `log_prob` method on the distribution returned # by the `self.forward` method above
         # HINT3: don't forget that `optimizer.step()` MINIMIZES a loss
         
         #compute log pi(a_t|s_t) 
         log_pi = self.forward(observations).log_prob(actions) 
-        #print(log_pi.shape)
-    
+       
 
         #use Back propagation tool to help us to compute policy gradient: the pseudo-loss is policy gradient without gradient -> the gradient of pseudo-loss is equal to the policy gradient.
         #the pseudo-loss is a weighted maximum likelihood, where the weight is advantages (reward to go with baseline), i.e., Q = q_value-baseline
         # use Minus - transform Gradient decent -> accent
         
-        '''
-        use mean(in slides cs 285 L5) or sum(in formula hint 1)?
-        '''
+
+        #it doesn't matter to use double mean or sum for tensor instead of mean and sum, because optimaser will adapt to it.
         #compute pseudo-loss sum_{t=0}^{T-1} [log pi(a_t|s_t) * (q_t - b_t)]
         loss = torch.neg(torch.mean(torch.mul(log_pi, advantages)))
 
@@ -198,8 +187,7 @@ class MLPPolicyPG(MLPPolicy):
         if self.nn_baseline:
             #most common choice of baseline is the on-policy value function V^pi(s_t) i.e., average return an agent gets if it starts in state s_t (Reward to go, i.e.,q_value)
             
-            
-            ## TODO: normalize the q_values to have a mean of zero and a standard deviation of one
+            # TODO: normalize the q_values to have a mean of zero and a standard deviation of one
             '''
             why normalize q_values first as targets of baseline?
             '''

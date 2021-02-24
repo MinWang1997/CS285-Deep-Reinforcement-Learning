@@ -55,7 +55,7 @@ def mean_squared_error(a, b):
 ############################################
 
 def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('rgb_array')):
-
+    # TODO: get this from hw1
     # initialize/reset Environment and get observation for the beginning of each new rollout /tau
     ob = env.reset() # TODO HINT: should be the output of resetting the env 
 
@@ -79,7 +79,10 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
         obs.append(ob)
         ac = policy.get_action(ob)  #TODO HINT: query the policy's get_action function 
         # Each timestep, the agent chooses an action
-        ac = ac[0]#Q get the first action why?
+        '''
+        #Q: get the first index for action. why?
+        '''
+        ac = ac[0]
         acs.append(ac)
 
         #environment returns an observation and a reward. Done being True indicates the episode has terminated.
@@ -101,13 +104,12 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
     return Path(obs, image_obs, acs, rewards, next_obs, terminals)
 
 def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, render=False, render_mode=('rgb_array')):
-    """
-        Collect rollouts until we have collected min_timesteps_per_batch steps.
+    # TODO: get this from hw1
+    #Collect rollouts until we have collected min_timesteps_per_batch steps.
+    #TODO implement this function
+    #Hint1: use sample_trajectory to get each path (i.e. rollout) that goes into paths
+    #Hint2: use get_pathlength to count the timesteps collected in each path
 
-        TODO implement this function
-        Hint1: use sample_trajectory to get each path (i.e. rollout) that goes into paths
-        Hint2: use get_pathlength to count the timesteps collected in each path
-    """
     timesteps_this_batch = 0
     paths = []
     while timesteps_this_batch < min_timesteps_per_batch:
@@ -119,18 +121,18 @@ def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, r
 
     return paths, timesteps_this_batch
 
-def sample_n_trajectories(env, policy, ntraj, max_path_length, render=False, render_mode=('rgb_array')):
-    """
-        Collect ntraj rollouts.
+def sample_n_trajectories(env, policy, ntraj, max_path_length, render=False, render_mode=('rgb_array')):    
+    # TODO: get this from hw1
+    #Collect ntraj rollouts
 
-        TODO implement this function
-        Hint1: use sample_trajectory to get each path (i.e. rollout) that goes into paths
-    """
+    #TODO implement this function
+    #Hint1: use sample_trajectory to get each path (i.e. rollout) that goes into paths
+
     paths = []
 
     #TODO
     for i in range(ntraj):
-        Path=sample_trajectory(env, policy, max_path_length, render, render_mode)
+        Path = sample_trajectory(env, policy, max_path_length, render, render_mode)
         paths.append(Path)
 
     return paths
