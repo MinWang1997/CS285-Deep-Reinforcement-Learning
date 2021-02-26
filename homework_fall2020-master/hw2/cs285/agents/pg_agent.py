@@ -106,7 +106,8 @@ class PGAgent(BaseAgent):
             ## to prevent silent broadcasting errors
             assert baselines_unnormalized.ndim == q_values.ndim
             ## baseline was trained with standardized q_values, so ensure that the predictions
-            ## have the same mean and standard deviation as the current batch of q_values???
+            ## have the same mean and standard deviation as the current batch of q_values
+            #???
             baselines = baselines_unnormalized * np.std(q_values) + np.mean(q_values)
             ## TODO: compute advantage estimates using q_values and baselines
             advantages = q_values - baselines
