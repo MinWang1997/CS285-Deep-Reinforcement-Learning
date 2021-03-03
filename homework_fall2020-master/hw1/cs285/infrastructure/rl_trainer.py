@@ -227,7 +227,14 @@ class RL_Trainer(object):
         # collect eval trajectories, for logging
         print("\nCollecting data for eval...")
         eval_paths, eval_envsteps_this_batch = utils.sample_trajectories(self.env, eval_policy, self.params['eval_batch_size'], self.params['ep_len'])
-
+        
+    ##
+        for eval_path in eval_paths:
+            print('eval_path',eval_path)
+            print('eval_path["reward"]',eval_path["reward"])
+            print('eval_path["reward"].sum()',eval_path["reward"].sum())
+        ##
+        
         # save eval rollouts as videos in tensorboard event file
         if self.log_video and train_video_paths != None:
             print('\nCollecting video rollouts eval')
@@ -243,8 +250,10 @@ class RL_Trainer(object):
         # save eval metrics
         if self.log_metrics:
             # returns, for logging
+            
             train_returns = [path["reward"].sum() for path in paths]
             eval_returns = [eval_path["reward"].sum() for eval_path in eval_paths]
+            
 
             # episode lengths, for logging
             train_ep_lens = [len(path["reward"]) for path in paths]

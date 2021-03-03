@@ -26,3 +26,11 @@ You will be running your policy gradients implementation in four experiments tot
 ## Plotting your results
 
 We have provided a snippet that may be used for reading your Tensorboard eventfiles in [scripts/read_results.py](cs285/scripts/read_results.py). Reading these eventfiles and plotting them with [matplotlib](https://matplotlib.org/) or [seaborn](https://seaborn.pydata.org/) will produce the cleanest results for your submission. For debugging purposes, we recommend visualizing the Tensorboard logs using `tensorboard --logdir data`.
+
+
+### Visualize saved tensorboard event file:
+
+$ cd cs285/data/<your_log_dir>
+$ tensorboard --logdir .
+
+Then, navigate to shown url to see scalar summaries as plots (in 'scalar' tab), as well as videos (in 'images' tab)
