@@ -33,7 +33,7 @@ class PGAgent(BaseAgent):
         # replay buffer
         self.replay_buffer = ReplayBuffer(1000000)
 
-        
+          
         
         
         
@@ -58,8 +58,9 @@ class PGAgent(BaseAgent):
         return train_log
 
     
-    
-    
+       #add
+    def save(self,filepath):
+        self.actor.save(filepath)
     
     
     

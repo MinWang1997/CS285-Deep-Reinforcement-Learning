@@ -1,19 +1,19 @@
-# Problem 3
+# Experiment 1
 
-* `python cs285/experiments/run.py run-p3`
-
-
-# Problem 4
-
-* `python cs285/experiments/run.py run-p4`
+* `python cs285/experiments/run.py run_exp_1`
 
 
-# Problem 6
+# Experiment 2
 
-* `python cs285/experiments/run.py run-p6`
+* `python cs285/experiments/run.py run_exp_2`
 
 
-# Problem 7
+# Experiment 3
 
-* `python cs285/experiments/run.py run-p7`
+* `python cs285/experiments/run.py run_exp_3`
+
+
+# Experiment 4
+
+* `python cs285/experiments/run.py run_exp_4`
 
