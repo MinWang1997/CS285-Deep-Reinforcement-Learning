@@ -10,12 +10,7 @@ import shlex
 import time
 import numpy as np
 from collections import defaultdict
-'''
 
-import seaborn as sns
-
-import matplotlib.pyplot as plt
-'''
 import pickle
 
 
@@ -103,7 +98,7 @@ def get_tested_hyper():
             #print(logdir)
             lr, bs = parse_exp_2(logdir)
             results.append((lr, bs))
-            #print(results)
+            print(results)
     
     return results
 
@@ -113,8 +108,8 @@ def run_exp_2(SEARCH = True):
     seeds = range(3)
     #search hyper parameters or not :learning rate -lr and batch size -b
     if SEARCH:
-        bs_list = [ 2**j for j in range(6,10) ]
-        lr_list = [1e-3, 1e-2, 3e-2, 4e-2, 5e-2, 6e-2, 7e-2, 8e-2, 9e-2, 1e-1]
+        bs_list = [ 2**j for j in range(8,14) ]
+        lr_list = [6e-3,7e-3,8e-3,9e-3, 3e-2, 4e-2, 6e-2, 8e-2]
         #bs_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 
 
@@ -122,7 +117,10 @@ def run_exp_2(SEARCH = True):
         tested = get_tested_hyper()#Don't run tested hyper parameters 
         print(tested)
         combinations = [(lr, bs) for lr in lr_list for bs in bs_list if (lr, bs) not in tested]
-        num = 40 #max number of conbination
+        num = 30 #max number of conbination
+        #print('combinations',combinations)
+        print('length of combinations',len(combinations))
+        
         assert num <= len(combinations)
         
 
@@ -136,16 +134,16 @@ def run_exp_2(SEARCH = True):
         commands = []
         for lr, bs in configs:
             for seed in seeds:
-                command = template.format(lr=lr, bs=bs,seed=seeds)
+                command = template.format(lr=lr, bs=bs,seed=seed)
                 commands.append(command)
-        print(commands)
-        '''
+        #print(commands)
+        
         
         os.makedirs('cs285/scripts/logs', exist_ok=True)
         logfiles = [f'cs285/experiments/logs/{i}.log' for i in range(len(commands))]
         metalogfile = 'cs285/experiments/logs/meta.log'
         run_multiple_commands(commands, logfiles, metalogfile)
-        '''
+        
         
     else:# run optimal hyper
         #seeds = [1] #default seeds is 1

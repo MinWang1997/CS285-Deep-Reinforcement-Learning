@@ -13,7 +13,7 @@ when running the following commands:
 
 - -dsa: do not standardize the advantage values.  If present, sets standardize_advantages to False. Otherwise, by default, standardizes advantages to have a mean of zero and standard deviation of one.
 
-- --video log freq -1 Don't generate video (by default) while debugging; To generate videos of the policy, remove this flag
+- --video log freq -1 Don't generate video (by default) while debugging; To generate videos of the policy, remove this flag --video_log_freq
 
 
 
@@ -105,7 +105,10 @@ add baseline
 
 
 
-
+### demo
+python cs285/scripts/run_hw2.py --env_name LunarLanderContinuous-v2 \
+--ep_len 1000 --discount 0.99 -n 100 -l 2 -s 64 -b 40000 -lr 0.005 -rtg \
+--nn_baseline --exp_name q3_demo --video_log_freq 5
 
 
 # Experiment 4 (HalfCheetah)
