@@ -108,9 +108,9 @@ def run_exp_2(SEARCH = True):
     seeds = range(3)
     #search hyper parameters or not :learning rate -lr and batch size -b
     if SEARCH:
-        bs_list = [ 2**j for j in range(8,14) ]
-        lr_list = [6e-3,7e-3,8e-3,9e-3, 3e-2, 4e-2, 6e-2, 8e-2]
-        #bs_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+        #bs_list = [ 2**j for j in range(8,14) ]
+        lr_list = [2e-2,3e-2, 4e-2,5e-2, 6e-2]
+        bs_list = [300, 500, 700, 900, 1000, 2000, 3000]
 
 
         
