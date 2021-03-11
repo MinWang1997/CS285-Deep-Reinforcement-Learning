@@ -104,7 +104,7 @@ def get_tested_hyper():
 
     
 
-def run_exp_2(SEARCH = True):
+def run_exp_2(SEARCH = False, nn_baseline=True):
     seeds = range(3)
     #search hyper parameters or not :learning rate -lr and batch size -b
     if SEARCH:
@@ -147,9 +147,16 @@ def run_exp_2(SEARCH = True):
         
     else:# run optimal hyper
         #seeds = [1] #default seeds is 1
-        template = "python cs285/scripts/run_hw2.py --env_name InvertedPendulum-v2 --ep_len 1000 --discount 0.9 -n 100 -l 2 -s 64 -b {bs} -lr {lr} -rtg --exp_name ip_b{bs}_r{lr}_seed_{seed} --seed {seed}"
-        lr = 2e-2
-        bs = 300
+   
+        
+        if nn_baseline == True:
+            template = "python cs285/scripts/run_hw2.py --env_name InvertedPendulum-v2 --ep_len 1000 --discount 0.9 -n 100 -l 2 -s 64 -b {bs} -lr {lr} -rtg --exp_name additional_nnbaseline_q2_b{bs}_r{lr}_seed_{seed} --seed {seed}"
+        
+        else:
+            template = "python cs285/scripts/run_hw2.py --env_name InvertedPendulum-v2 --ep_len 1000 --discount 0.9 -n 100 -l 2 -s 64 -b {bs} -lr {lr} -rtg --exp_name q2_b{bs}_r{lr}_seed_{seed} --seed {seed}"
+        
+        lr = 1e-2
+        bs = 4096
         commands = []
         for seed in seeds:
             command = template.format(lr=lr, bs=bs, seed=seed)

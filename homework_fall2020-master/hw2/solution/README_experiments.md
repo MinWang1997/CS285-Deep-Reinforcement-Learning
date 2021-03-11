@@ -50,18 +50,8 @@ when running the following commands:
 `python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 5000 \
     -rtg --exp_name q1_lb_rtg_na`
    
-## questions
-– Which value estimator has better performance without advantage-standardization: the trajectory-centric one, or the one using reward-to-go?
 
-    using reward-to-go converges much faster
-     
-– Did advantage standardization help?
-    
-    yes, during the convergence process, the reward is more stable
 
-– Did the batch size make an impact?
-    
-    yes, large batch can converge to maxinum score 200 
 
 
 # Experiment 2 (InvertedPendulum)
@@ -81,10 +71,10 @@ when running the following commands:
 Note: it is hard to achieve largest lr and smallest batch size at the same time.
 
 
-add baseline 
+add baseline (no change)
 `python cs285/scripts/run_hw2.py --env_name InvertedPendulum-v2 \
---ep_len 1000 --discount 0.9 -n 100 -l 2 -s 64 -b 300 -lr 0.01 -rtg \
---nn_baseline --exp_name q2_b300_r0.01_rtg_nnbaseline`
+--ep_len 1000 --discount 0.9 -n 100 -l 2 -s 64 -b 4096 -lr 0.01 -rtg \
+--nn_baseline --exp_name additional_q2_b4096_r0.01_rtg_nnbaseline`
 
 
 
