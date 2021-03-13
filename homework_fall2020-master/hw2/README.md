@@ -34,3 +34,6 @@ $ cd cs285/data/<your_log_dir>
 $ tensorboard --logdir .
 
 Then, navigate to shown url to see scalar summaries as plots (in 'scalar' tab), as well as videos (in 'images' tab)
+
+## solution
+see solution folder
