@@ -2,6 +2,6 @@
  Uni Stuttgart lab course Conversational AI
 
 Including:
-
-CS 285 homework 1 and 2
-
+my solution of CS 285 at UC Berkeley
+Deep Reinforcement Learning
+http://rail.eecs.berkeley.edu/deeprlcourse/
