@@ -1,8 +1,3 @@
-# Policy Gradient Agent 
-# my solution of CS 285 at UC Berkeley Deep Reinforcement Learning
- Uni Stuttgart lab course Conversational AI
-
-Including:
-my solution of CS 285 at UC Berkeley
-Deep Reinforcement Learning
+# my solution of CS285 Deep Reinforcement Learning
+at UC Berkeley
 http://rail.eecs.berkeley.edu/deeprlcourse/
